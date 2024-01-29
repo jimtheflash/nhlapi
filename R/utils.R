@@ -20,3 +20,16 @@ default_headers <- function() {
 
 }
 
+season_start_dates_lu <- function() {
+
+  read.csv(
+    system.file('nhl_season_start_dates.csv', package='nhlapi')
+    )
+
+}
+
+sleep_default <- function() {
+
+  5
+
+}

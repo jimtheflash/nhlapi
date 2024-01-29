@@ -5,8 +5,10 @@ get_pbp <- function(game_id) {
     hdrs=default_headers()
   )
 
-  httr2::req_perform(pbp_req) |>
+  pbp_json <- httr2::req_perform(pbp_req) |>
     httr2::resp_body_json()
+
+  return(pbp_json)
 
 }
 
