@@ -94,8 +94,11 @@ build_season_boxscores_df <- function(season, sleep_time=5, verbose=FALSE) {
     for (game_id in game_ids) {
       if (verbose==TRUE) message('grabbing boxscore for ', game_id)
       Sys.sleep(sleep_time)
-      parsed_boxscore <- get_boxscore(game_id) |>
-        parse_boxscore()
+      parsed_boxscore <- try(get_boxscore(game_id) |> parse_boxscore())
+      if ('try-error' %in% class(parsed_boxscore)) {
+        message('something went wrong with game_id ', game_id)
+        next
+      }
       parsed_boxscores[[length(parsed_boxscores) + 1]] <- parsed_boxscore
     }
   }
