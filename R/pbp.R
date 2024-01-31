@@ -1,3 +1,14 @@
+#' @name pbp
+#' @title functions for working with play by play data
+#' @param game_id character string of game id
+#' @param pbp_json list output from `get_pbp()`
+#' @md
+NULL
+
+#' @rdname pbp
+#' @details `get_pbp()` returns a list object from the request response
+#' @export
+#' @md
 get_pbp <- function(game_id) {
 
   pbp_req <- create_request(
@@ -12,6 +23,10 @@ get_pbp <- function(game_id) {
 
 }
 
+#' @rdname pbp
+#' @details `parse_pbp()` takes a list from `get_pbp()` as input, and returns a data.frame of plays
+#' @export
+#' @md
 parse_pbp <- function(pbp_json) {
 
   # extract the plays from the pbp_json
@@ -69,8 +84,4 @@ parse_pbp <- function(pbp_json) {
 
   return(pbp_df)
 
-}
-
-tidy_pbp <- function(parsed) {
-  return()
 }

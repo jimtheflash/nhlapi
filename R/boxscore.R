@@ -1,7 +1,17 @@
-#' boxscore funtions
-#' @param game_id character game id from nhl
-#' @param boxscore_json list output from `get_boxscore`
+#' @name boxscore
+#' @title functions for working with boxscore data
+#' @param game_id character string of game id
+#' @param boxscore_json list output from `get_boxscore()`
+#' @param season character string of season, which can be fussy - for instance, the 2023-24 season shows up as both `202324` and `20232024` in some use cases
+#' @param sleep_time numeric how long to sleep between API calls in seconds
+#' @param verbose logical should functions with the option to print messages print them
+#' @md
+NULL
+
+#' @rdname boxscore
+#' @details `get_boxscore()` returns a list object from the request response
 #' @export
+#' @md
 get_boxscore <- function(game_id) {
 
   boxscore_req <- create_request(
@@ -16,6 +26,11 @@ get_boxscore <- function(game_id) {
 
 }
 
+
+#' @rdname boxscore
+#' @details `parse_boxscore()` takes a list from `get_boxscore()` as input, and returns a data.frame of boxscores
+#' @export
+#' @md
 parse_boxscore <- function(boxscore_json) {
 
   # extract the boxscore
@@ -78,6 +93,10 @@ parse_boxscore <- function(boxscore_json) {
 
 }
 
+#' @rdname boxscore
+#' @details `parse_boxscore()` takes is a wrapper that takes a season string as input and builds a data.frame with all the boxscores for that season from scratch. THIS IS V TIME CONSUMING AND COULD MAKE THE API GODS MAD, USE A GOOD SLEEP TIME HERE.
+#' @export
+#' @md
 build_season_boxscores_df <- function(season, sleep_time=5, verbose=FALSE) {
 
   # get all the week starts for the season, sleeping appropriately
