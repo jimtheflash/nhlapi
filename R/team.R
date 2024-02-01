@@ -1,8 +1,3 @@
-team_abbrevs <- function() {
-
-
-
-}
 
 
 get_team_roster_seasons <- function(team_abbrev, season) {

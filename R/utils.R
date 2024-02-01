@@ -33,3 +33,9 @@ sleep_default <- function() {
   5
 
 }
+
+team_abbrevs <- function() {
+
+  list()
+
+}
