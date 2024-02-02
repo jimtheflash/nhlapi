@@ -8,7 +8,7 @@
 \usage{
 get_pbp(game_id)
 
-parse_pbp(pbp_json)
+parse_pbp(pbp_json, verbose = FALSE)
 }
 \arguments{
 \item{game_id}{character string of game id}
