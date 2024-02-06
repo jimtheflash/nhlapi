@@ -4,7 +4,7 @@
 #' @param pbp_json list output from `get_pbp()`
 #' @md
 NULL
-
+# exports ----
 #' @rdname pbp
 #' @details `get_pbp()` returns a list object from the request response
 #' @export
@@ -70,6 +70,7 @@ parse_pbp <- function(pbp_json, verbose=FALSE) {
 
 }
 
+# unexported ----
 parse_pbp_details <- function(game_id, event_id, event_type_code, pbp_details) {
   # make empty details output
   empty_pbp_df <- data.frame(
@@ -255,3 +256,4 @@ parse_pbp_event <- function(game_id, play) {
   # stash that info into the play_list
   return(play_df)
 }
+
