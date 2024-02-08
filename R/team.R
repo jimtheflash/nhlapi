@@ -1,5 +1,3 @@
-
-
 get_team_roster_seasons <- function(team_abbrev, season) {
 
   trs_req <- create_request(
