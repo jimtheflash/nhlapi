@@ -61,11 +61,16 @@ parse_pbp <- function(pbp_json, verbose=FALSE) {
 
   # bind plays and details, then merge em
   all_plays <- dplyr::bind_rows(play_list)
+  all_plays <- as.data.frame(lapply(all_plays, as.character))
   all_details <- dplyr::bind_rows(details_list)
-
-  # merge into one big pbp df and return
-  pbp_df <- dplyr::full_join(all_plays, all_details, by = dplyr::join_by(game_id, event_id))
-
+  all_details <- as.data.frame(lapply(all_details, as.character))
+  # merge into one big pbp df, engineer and fix some stuff
+  pbp_df <- all_plays |>
+    dplyr::full_join(all_details, by = dplyr::join_by(game_id, event_id)) |>
+    dplyr::mutate(
+      time_in_period_seconds = as.numeric(lubridate::as.duration(lubridate::ms(time_in_period))),
+      time_in_game_seconds = time_in_period_seconds + (1200*(as.numeric(period)-1)))
+  pbp_df[pbp_df == 'NULL'] <- NA
   return(pbp_df)
 
 }
@@ -253,7 +258,6 @@ parse_pbp_event <- function(game_id, play) {
     if (efn=='typeCode') play_df$event_type_code <- val
   }
 
-  # stash that info into the play_list
+  # make everything a character for simplicity
   return(play_df)
 }
-

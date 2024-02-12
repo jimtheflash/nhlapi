@@ -1,8 +1,9 @@
-create_request <- function(base_uri, hdrs=NULL, bdy=NULL, ...) {
+create_request <- function(base_uri, hdrs=NULL, bdy=NULL, qry=NULL, ...) {
 
   req <- httr2::request(base_uri)
 
   if (!is.null(hdrs)) req <- req |> httr2::req_headers(!!!hdrs)
+  if (!is.null(bdy)) req <- req |> httr2::req_body_json(bdy)
   if (!is.null(bdy)) req <- req |> httr2::req_body_json(bdy)
   # TODO handle ellipses
 

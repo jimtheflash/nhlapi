@@ -1,4 +1,4 @@
-get_week_schedule_dates <- function(season, sleep_time=5, verbose=FALSE) {
+get_week_schedule_dates <- function(season, sleep_time=1, verbose=FALSE) {
 
   # get the lookup from the package, use the function to get the right start_date
   season_start_dates <- season_start_dates_lu()
@@ -27,7 +27,6 @@ get_week_schedule_dates <- function(season, sleep_time=5, verbose=FALSE) {
 
 }
 
-
 get_week_schedule <- function(game_date) {
 
   schedule_req <- create_request(
@@ -37,6 +36,8 @@ get_week_schedule <- function(game_date) {
 
   schedule_json <- httr2::req_perform(schedule_req) |>
     httr2::resp_body_json()
+
+  return(schedule_json)
 
 }
 

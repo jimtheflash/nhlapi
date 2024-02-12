@@ -72,8 +72,8 @@ parse_boxscore <- function(boxscore_json) {
     all_positions_df <- dplyr::bind_rows(position_output_list)
 
     # append team info
-    all_positions_df$teamId <- boxscore_json[[team]][['id']]
-    all_positions_df$teamAbbrev <- boxscore_json[[team]][['abbrev']]
+    all_positions_df$team_id <- boxscore_json[[team]][['id']]
+    all_positions_df$team_abbrev <- boxscore_json[[team]][['abbrev']]
 
     # stick in the list
     team_output_list[[team]] <- all_positions_df
@@ -83,10 +83,14 @@ parse_boxscore <- function(boxscore_json) {
   # most of the column names are recycled across pos groups, so bind em all together
   boxscore_df <- dplyr::bind_rows(team_output_list)
 
+  # now is the time to clean names - use janitor
+  new_names <- janitor::make_clean_names(names(boxscore_df))
+  names(boxscore_df) <- new_names
+
   # append game info, but not too much, cuz a game object will have that
-  boxscore_df$gameId <- boxscore_json$id
+  boxscore_df$game_id <- boxscore_json$id
   boxscore_df$season <- boxscore_json$season
-  boxscore_df$gameType <- boxscore_json$gameType
+  boxscore_df$game_type <- boxscore_json$gameType
   boxscore_df$game_date <- boxscore_json$gameDate
 
   return(boxscore_df)
@@ -125,9 +129,5 @@ build_season_boxscores_df <- function(season, sleep_time=5, verbose=FALSE) {
   season_boxscores_df <- dplyr::bind_rows(parsed_boxscores)
 
   return(season_boxscores_df)
-
-
-
-
 
 }

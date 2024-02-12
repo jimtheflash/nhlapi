@@ -1,20 +1,11 @@
-get_active_players <- function() {
-
-  active_players_req <- create_request('https://search.d3.nhle.com/api/v1/search/player',
-                                       hdrs=default_headers(),
-                                       bdy=list(limit=99999,
-                                                culture='en-us',
-                                                active='true',
-                                                q='%2A'))
-  active_players_json <- httr2::req_perform(active_players_req)
-
-  |>
-    httr2::resp_body_json()
-
-
-
-
-
+get_all_players <- function(fn='nhl_players.csv') {
+  read.csv(system.file(fn, package='nhlapi'))
 }
 
-get_player_gamelogs <- function(player_id, game_id) {}
+get_all_players_from_api <- function(write_to_package=TRUE, fn='nhl_players.csv') {
+
+  resp <- jsonlite::fromJSON('https://search.d3.nhle.com/api/v1/search/player?culture=en-us&limit=999999&q=%2A')
+  resp$update_ts <- Sys.time()
+  write.csv(resp, file = filepath, quote = FALSE, row.names = FALSE)
+
+}
