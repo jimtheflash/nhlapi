@@ -22,11 +22,11 @@ player_offense_by_period <- function(parsed_pbp) {
 
   # assists ----
   assists <- parsed_pbp |>
-    dplyr::select(assist1_player_id, assist2_player_id, period, event_id) |>
+    dplyr::select(assist1_player_id, assist2_player_id, game_id, period, event_id) |>
     dplyr::filter(!is.na(assist1_player_id) | !is.na(assist2_player_id)) |>
     tidyr::pivot_longer(dplyr::starts_with('assist'), values_to = 'player_id') |>
     dplyr::filter(!is.na(player_id)) |>
-    dplyr::group_by(player_id) |>
+    dplyr::group_by(player_id, game_id) |>
     dplyr::summarise(
       assists_p1 = dplyr::n_distinct(event_id[period==1]),
       assists_p2 = dplyr::n_distinct(event_id[period==2]),
@@ -37,12 +37,13 @@ player_offense_by_period <- function(parsed_pbp) {
   shots <- parsed_pbp |>
     dplyr::transmute(
       player_id = shooting_player_id,
+      game_id,
       period,
       event_id,
       event_type
     ) |>
     dplyr::filter(!is.na(player_id)) |>
-    dplyr::group_by(player_id) |>
+    dplyr::group_by(player_id, game_id) |>
     dplyr::summarise(
       shots_p1 = dplyr::n_distinct(event_id[period==1]),
       shots_on_goal_p1 = dplyr::n_distinct(event_id[period==1 & event_type=='shot_on_goal']),
@@ -62,12 +63,13 @@ player_offense_by_period <- function(parsed_pbp) {
   goals <- parsed_pbp |>
     dplyr::transmute(
       player_id = scoring_player_id,
+      game_id,
       period,
       event_id,
       event_type,
     ) |>
     dplyr::filter(!is.na(player_id)) |>
-    dplyr::group_by(player_id) |>
+    dplyr::group_by(player_id, game_id) |>
     dplyr::summarise(
       goals_p1 = dplyr::n_distinct(event_id[period==1]),
       goals_p2 = dplyr::n_distinct(event_id[period==2]),
@@ -76,8 +78,8 @@ player_offense_by_period <- function(parsed_pbp) {
 
   # join em up
   joined <- assists |>
-    dplyr::full_join(shots, by = 'player_id') |>
-    dplyr::full_join(goals, by = 'player_id')
+    dplyr::full_join(shots, by = dplyr::join_by(player_id, game_id)) |>
+    dplyr::full_join(goals, by = dplyr::join_by(player_id, game_id))
 
   return(joined)
 
@@ -90,13 +92,15 @@ player_shifts_stats_by_period <- function(shifts) {
 
   # shifts and toi
   shift_summary <- shifts |>
+    dplyr::filter(!is.na(playerId)) |>
     dplyr::mutate(
       player_id = as.character(playerId),
+      game_id = as.character(gameId),
       shift_start_period_elapsed_seconds = as.numeric(lubridate::as.duration(lubridate::ms(startTime))),
       shift_duration_seconds = as.numeric(lubridate::as.duration(lubridate::ms(duration)))
     ) |>
     dplyr::group_by(
-      player_id
+      player_id, game_id
     ) |>
     dplyr::summarise(
       shifts_p1 = dplyr::n_distinct(shiftNumber[period==1]),
