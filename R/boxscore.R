@@ -88,17 +88,17 @@ parse_boxscore <- function(boxscore_json) {
   names(boxscore_df) <- new_names
 
   # append game info, but not too much, cuz a game object will have that
-  boxscore_df$game_id <- boxscore_json$id
-  boxscore_df$season <- boxscore_json$season
-  boxscore_df$game_type <- boxscore_json$gameType
-  boxscore_df$game_date <- boxscore_json$gameDate
+  boxscore_df$game_id <- as.character(boxscore_json$id)
+  boxscore_df$season <- as.character(boxscore_json$season)
+  boxscore_df$game_type <- as.character(boxscore_json$gameType)
+  boxscore_df$game_date <- as.character(boxscore_json$gameDate)
 
   return(boxscore_df)
 
 }
 
 #' @rdname boxscore
-#' @details `parse_boxscore()` takes is a wrapper that takes a season string as input and builds a data.frame with all the boxscores for that season from scratch. THIS IS V TIME CONSUMING AND COULD MAKE THE API GODS MAD, USE A GOOD SLEEP TIME HERE.
+#' @details `build_season_boxscores_df()` is a wrapper that takes a season string as input and builds a data.frame with all the boxscores for that season from scratch. THIS IS V TIME CONSUMING AND COULD MAKE THE API GODS MAD, USE A GOOD SLEEP TIME HERE.
 #' @export
 #' @md
 build_season_boxscores_df <- function(season, sleep_time=5, verbose=FALSE) {
