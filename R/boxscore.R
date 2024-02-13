@@ -93,6 +93,15 @@ parse_boxscore <- function(boxscore_json) {
   boxscore_df$game_type <- as.character(boxscore_json$gameType)
   boxscore_df$game_date <- as.character(boxscore_json$gameDate)
 
+  # explicitly return id cols as characters
+  boxscore_df <- boxscore_df |>
+    dplyr::mutate(
+      dplyr::across(
+        tidyselect::ends_with('_id'),
+        as.character
+      )
+    )
+
   return(boxscore_df)
 
 }

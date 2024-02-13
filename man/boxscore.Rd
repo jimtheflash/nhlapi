@@ -32,5 +32,5 @@ functions for working with boxscore data
 
 \code{parse_boxscore()} takes a list from \code{get_boxscore()} as input, and returns a data.frame of boxscores
 
-\code{parse_boxscore()} takes is a wrapper that takes a season string as input and builds a data.frame with all the boxscores for that season from scratch. THIS IS V TIME CONSUMING AND COULD MAKE THE API GODS MAD, USE A GOOD SLEEP TIME HERE.
+\code{build_season_boxscores_df()} is a wrapper that takes a season string as input and builds a data.frame with all the boxscores for that season from scratch. THIS IS V TIME CONSUMING AND COULD MAKE THE API GODS MAD, USE A GOOD SLEEP TIME HERE.
 }
