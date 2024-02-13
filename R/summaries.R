@@ -1,3 +1,34 @@
+boxscore_team_totals <- function(parsed_boxscore) {
+
+  sum_rm_na <- function(x) sum(x, na.rm = TRUE)
+
+  cols_to_sum <- c(
+    "goals",
+    "assists",
+    "points",
+    "pim",
+    "hits",
+    "blocked_shots",
+    "power_play_goals",
+    "power_play_points",
+    "shorthanded_goals",
+    "sh_points")
+
+  output <- parsed_boxscore |>
+    dplyr::group_by(game_id, team_id) |>
+    dplyr::summarise(
+      dplyr::across(
+        dplyr::any_of(cols_to_sum),
+        list(team_game = sum_rm_na)
+      )
+    )
+
+  output[is.na(output)] <- 0
+
+  return(output)
+
+}
+
 first_goal <- function(parsed_pbp) {
 
   parsed_pbp |>
@@ -81,6 +112,8 @@ player_offense_by_period <- function(parsed_pbp) {
     dplyr::full_join(shots, by = dplyr::join_by(player_id, game_id)) |>
     dplyr::full_join(goals, by = dplyr::join_by(player_id, game_id))
 
+  joined[is.na(joined)] <- 0
+
   return(joined)
 
 }
@@ -134,11 +167,11 @@ player_shifts_stats_by_period <- function(shifts) {
   output <- shift_summary |>
     dplyr::left_join(pp_goals, by='player_id')
 
-  # replace NAs with 0s
-  output[is.na(output)] <- 0
-
   # id starters
   output$starter_ind <- ifelse(output$player_id %in% starters, 1, 0)
+
+  # replace NAs with 0s
+  output[is.na(output)] <- 0
 
   return(output)
 
