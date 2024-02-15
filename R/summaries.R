@@ -109,6 +109,7 @@ player_offense_by_period <- function(parsed_pbp) {
       period,
       event_id,
       event_type,
+      assist1_player_id,
     ) |>
     dplyr::filter(!is.na(player_id)) |>
     dplyr::group_by(player_id, game_id) |>
