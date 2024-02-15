@@ -116,8 +116,15 @@ player_offense_by_period <- function(parsed_pbp) {
       goals_p1 = dplyr::n_distinct(event_id[period==1]),
       goals_p2 = dplyr::n_distinct(event_id[period==2]),
       goals_p3 = dplyr::n_distinct(event_id[period==3]),
-      goals_ot = dplyr::n_distinct(event_id[!period %in% c(1,2,3)])) |>
-    dplyr::ungroup()
+      goals_ot = dplyr::n_distinct(event_id[!period %in% c(1,2,3)]),
+      unassisted_goals_p1 = dplyr::n_distinct(event_id[is.na(assist1_player_id)&period==1]),
+      unassisted_goals_p2 = dplyr::n_distinct(event_id[is.na(assist1_player_id)&period==2]),
+      unassisted_goals_p3 = dplyr::n_distinct(event_id[is.na(assist1_player_id)&period==3]),
+      unassisted_goals_ot = dplyr::n_distinct(event_id[is.na(assist1_player_id)&!period %in% c(1,2,3)])) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      unassisted_goals = unassisted_goals_p1 + unassisted_goals_p2 + unassisted_goals_p3 + unassisted_goals_ot
+    )
 
   # join em up
   joined <- assists |>
