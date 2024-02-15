@@ -6,7 +6,12 @@ player_shifts <- function(game_id) {
                 , "cayenneExp=gameId=", game_id, "%20and%20((duration%20!=%20%2700:00%27%20and%20typeCode%20=%20517)%20or%20typeCode%20!=%20517%20)"
                 , "&exclude=teamName")
   resp <- jsonlite::fromJSON(url)
-  dplyr::bind_rows(resp$data)
+  output <- dplyr::bind_rows(resp$data)
+
+  # tidy names before exporting
+  new_names <- janitor::make_clean_names(names(output))
+  names(output) <- new_names
+  browser()
 
 }
 
